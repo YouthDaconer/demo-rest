@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,13 +26,13 @@ public class PaymentMethod implements java.io.Serializable {
 	
 	private String enable;
 	
-	private Integer name;
+	private String name;
 	private List<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>(0);
 
 	public PaymentMethod() {
 	}
 
-	public PaymentMethod(Integer payId, String enable, Integer name, List<ShoppingCart> shoppingCarts) {
+	public PaymentMethod(Integer payId, String enable, String name, List<ShoppingCart> shoppingCarts) {
 		this.payId = payId;
 		this.enable = enable;
 		this.name = name;
@@ -39,6 +41,7 @@ public class PaymentMethod implements java.io.Serializable {
 
 	@Id
 	@Column(name = "pay_id", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getPayId() {
 		return this.payId;
 	}
@@ -57,11 +60,11 @@ public class PaymentMethod implements java.io.Serializable {
 	}
 
 	@Column(name = "name", nullable = false)
-	public Integer getName() {
+	public String getName() {
 		return this.name;
 	}
 
-	public void setName(Integer name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

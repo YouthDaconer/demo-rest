@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -31,23 +33,29 @@ public class ShoppingCart implements java.io.Serializable {
 	private Integer items;
 
 	private Long total;
+	
+	private String enable;
+	
 	private List<ShoppingProduct> shoppingProducts = new ArrayList<ShoppingProduct>(0);
 
 	public ShoppingCart() {
 	}
 
-	public ShoppingCart(Integer carId, Customer customer, Integer items, PaymentMethod paymentMethod,
-			List<ShoppingProduct> shoppingProducts, Long total) {
+	public ShoppingCart(Integer carId, Customer customer, PaymentMethod paymentMethod, Integer items, Long total,
+			String enable, List<ShoppingProduct> shoppingProducts) {
+		super();
 		this.carId = carId;
 		this.customer = customer;
 		this.paymentMethod = paymentMethod;
 		this.items = items;
 		this.total = total;
+		this.enable = enable;
 		this.shoppingProducts = shoppingProducts;
 	}
 
 	@Id
 	@Column(name = "car_id", unique = true, nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getCarId() {
 		return this.carId;
 	}
@@ -92,6 +100,15 @@ public class ShoppingCart implements java.io.Serializable {
 
 	public void setTotal(Long total) {
 		this.total = total;
+	}
+	
+	@Column(name = "enable", nullable = false)
+	public String getEnable() {
+		return this.enable;
+	}
+
+	public void setEnable(String enable) {
+		this.enable = enable;
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "shoppingCart")
