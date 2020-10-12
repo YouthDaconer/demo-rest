@@ -2,6 +2,11 @@ package co.edu.usbcali.demo.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +23,22 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	ProductRepository productRepository;
+
+	@Autowired
+	Validator validator;
+
+	@Override
+	public void validate(Product entity) throws Exception {
+		if (entity == null) {
+			throw new Exception("El product es null");
+		}
+
+		Set<ConstraintViolation<Product>> constraintViolation = validator.validate(entity);
+
+		if (constraintViolation.isEmpty() == false) {
+			throw new ConstraintViolationException(constraintViolation);
+		}
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -97,40 +118,11 @@ public class ProductServiceImpl implements ProductService {
 		if (id == null || id.isBlank() == true) {
 			throw new Exception("El proId es obligatorio");
 		}
-		
-		if(productRepository.existsById(id)) {
+
+		if (productRepository.existsById(id)) {
 			delete(productRepository.findById(id).get());
-		}
-	}
-
-	@Override
-	public void validate(Product entity) throws Exception {
-		if (entity == null) {
-			throw new Exception("El entity es null");
-		}
-
-		if (entity.getDetail() == null || entity.getDetail().isBlank() == true) {
-			throw new Exception("El detail es obligatorio");
-		}
-
-		if (entity.getProId() == null || entity.getProId().isBlank() == true) {
-			throw new Exception("El proId es obligatorio");
-		}
-
-		if (entity.getEnable() == null || entity.getEnable().isBlank() == true) {
-			throw new Exception("El enable es obligatorio");
-		}
-
-		if (entity.getName() == null || entity.getName().isBlank() == true) {
-			throw new Exception("El name es obligatorio");
-		}
-
-		if (entity.getImage() == null || entity.getImage().isBlank() == true) {
-			throw new Exception("El image es obligatorio");
-		}
-
-		if (entity.getPrice() == null || entity.getPrice() < 0) {
-			throw new Exception("El price es obligatorio");
+		} else {
+			throw new Exception("El product con proId " + id + " no existe");
 		}
 	}
 

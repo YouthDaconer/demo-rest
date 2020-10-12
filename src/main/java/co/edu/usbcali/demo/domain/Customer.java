@@ -9,6 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 
@@ -18,26 +22,36 @@ public class Customer implements java.io.Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@Column(name = "email", unique = true, nullable = false)
+	@NotNull
+	@Email
+	@Size(min = 3, max = 255)
 	private String email;
 	
-	@Column(name = "address", nullable = false)
+	@NotNull
+	@Size(min = 3, max = 255)
+	@NotEmpty
 	private String address;
-	
-	@Column(name = "enable", nullable = false)
+
+	@NotNull
+	@Size(min = 1, max = 1)
+	@NotEmpty
 	private String enable;
 	
-	@Column(name = "name", nullable = false)
+	@NotNull
+	@Size(min = 4, max = 255)
+	@NotEmpty
 	private String name;
 	
-	@Column(name = "phone", nullable = false)
+	@NotNull
+	@Size(min = 6, max = 255)
+	@NotEmpty
 	private String phone;
 	
-	@Column(name = "token", nullable = false)
+	@NotNull
+	@Size(max = 255)
+	@NotEmpty
 	private String token;
 	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
 	private List<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>(0);
 
 	public Customer() {
@@ -55,6 +69,8 @@ public class Customer implements java.io.Serializable {
 	}
 
 	
+	@Id
+	@Column(name = "email", unique = true, nullable = false)
 	public String getEmail() {
 		return this.email;
 	}
@@ -63,7 +79,7 @@ public class Customer implements java.io.Serializable {
 		this.email = email;
 	}
 
-	
+	@Column(name = "address", nullable = false)
 	public String getAddress() {
 		return this.address;
 	}
@@ -72,7 +88,7 @@ public class Customer implements java.io.Serializable {
 		this.address = address;
 	}
 
-	
+	@Column(name = "enable", nullable = false)
 	public String getEnable() {
 		return this.enable;
 	}
@@ -81,7 +97,7 @@ public class Customer implements java.io.Serializable {
 		this.enable = enable;
 	}
 
-	
+	@Column(name = "name", nullable = false)
 	public String getName() {
 		return this.name;
 	}
@@ -89,8 +105,8 @@ public class Customer implements java.io.Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	
+	@Column(name = "phone", nullable = false)
 	public String getPhone() {
 		return this.phone;
 	}
@@ -99,7 +115,7 @@ public class Customer implements java.io.Serializable {
 		this.phone = phone;
 	}
 
-	
+	@Column(name = "token", nullable = false)	
 	public String getToken() {
 		return this.token;
 	}
@@ -108,7 +124,7 @@ public class Customer implements java.io.Serializable {
 		this.token = token;
 	}
 
-	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
 	public List<ShoppingCart> getShoppingCarts() {
 		return this.shoppingCarts;
 	}

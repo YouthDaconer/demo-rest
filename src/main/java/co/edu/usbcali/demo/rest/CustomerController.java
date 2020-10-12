@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +26,7 @@ import co.edu.usbcali.demo.service.CustomerService;
 
 @RestController					 	
 @RequestMapping("/api/customer")
+@CrossOrigin("*")
 public class CustomerController {
 
 	private final static Logger log = LoggerFactory.getLogger(CustomerController.class);
@@ -37,25 +40,22 @@ public class CustomerController {
 	@PostMapping("/save")
 	public ResponseEntity<?> save(@Valid @RequestBody CustomerDTO customerDTO) throws Exception{
 			Customer customer = customerMapper.toCustomer(customerDTO);
-			customerService.save(customer);
+			customer = customerService.save(customer);
 			customerDTO=customerMapper.toCustomerDTO(customer);
 			
-			return ResponseEntity.badRequest().body(customerDTO);
+			return ResponseEntity.ok().body(customerDTO);
 		
 	}
 
-	
 	@PutMapping("/update")
 	public ResponseEntity<?> update(@Valid @RequestBody CustomerDTO customerDTO) throws Exception{
 			Customer customer = customerMapper.toCustomer(customerDTO);
 			customerService.update(customer);
 			customerDTO=customerMapper.toCustomerDTO(customer);
 	
-			return ResponseEntity.badRequest().body(customerDTO);
+			return ResponseEntity.ok().body(customerDTO);
 		
 	}
-	
-	
 	
 	@GetMapping("/findAll")
 	public ResponseEntity<?> findAll() throws Exception{
@@ -65,13 +65,11 @@ public class CustomerController {
 			return ResponseEntity.ok().body(customerDTOs);
 	}
 	
-	
-	
 	@GetMapping("/findById/{email}")
 	public ResponseEntity<?> findById(@PathVariable("email") String email) throws Exception {
 			Optional<Customer> customerOptional=customerService.findById(email);
 			if (customerOptional.isPresent()==false) {
-				return ResponseEntity.ok().body("Customer no encontrado");
+				return ResponseEntity.ok().body(null);
 			}
 			Customer customer = customerOptional.get();
 			
@@ -81,18 +79,11 @@ public class CustomerController {
 			return ResponseEntity.ok().body(customerDTO);
 	}
 	
-	@GetMapping("/delete/{email}")
+	@DeleteMapping("/delete/{email}")
 	public ResponseEntity<?> delete(@PathVariable("email") String email) throws Exception {
-			Optional<Customer> customerOptional=customerService.findById(email);
-			if (customerOptional.isPresent() == false) {
-				return ResponseEntity.ok().body("Customer no encontrado");
-			}
-			
-			Customer customer = customerOptional.get();
-			
-			customerService.delete(customer);
+			customerService.deleteById(email);
 
-			return ResponseEntity.ok().body("Ok");
+			return ResponseEntity.ok().build();
 	}
 	
 	

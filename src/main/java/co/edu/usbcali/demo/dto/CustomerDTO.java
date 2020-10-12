@@ -1,12 +1,40 @@
 package co.edu.usbcali.demo.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class CustomerDTO {
 
+	@NotNull
+	@Email
+	@Size(min = 3, max = 255)
 	private String email;
+	
+	@NotNull
+	@Size(min = 3, max = 255)
+	@NotEmpty
 	private String address;
+
+	@NotNull
+	@Size(min = 1, max = 1)
+	@NotEmpty
 	private String enable;
+	
+	@NotNull
+	@Size(min = 4, max = 255)
+	@NotEmpty
 	private String name;
+	
+	@NotNull
+	@Size(min = 6, max = 255)
+	@NotEmpty
 	private String phone;
+	
+	@NotNull
+	@Size(max = 255)
+	@NotEmpty
 	private String token;
 
 	public CustomerDTO() {

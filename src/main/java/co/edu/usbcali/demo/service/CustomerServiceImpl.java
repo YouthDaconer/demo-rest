@@ -2,6 +2,11 @@ package co.edu.usbcali.demo.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -18,6 +23,22 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	CustomerRepository customerRepository;
+	
+	@Autowired
+	Validator validator;
+	
+	@Override
+	public void validate(Customer entity) throws Exception {
+		if (entity == null) {
+			throw new Exception("El customer es null");
+		}
+		
+		Set<ConstraintViolation<Customer>> constraintViolation = validator.validate(entity);
+		
+		if(constraintViolation.isEmpty() == false) {
+			throw new ConstraintViolationException(constraintViolation);
+		}
+	}
 
 	@Override
 	@Transactional(readOnly = true)
@@ -102,37 +123,6 @@ public class CustomerServiceImpl implements CustomerService {
 			delete(customerRepository.findById(id).get());
 		} else {
 			throw new Exception("El customer con id " + id + " no existe");
-		}
-	}
-
-	@Override
-	public void validate(Customer entity) throws Exception {
-		if (entity == null) {
-			throw new Exception("El entity es null");
-		}
-
-		if (entity.getAddress() == null || entity.getAddress().isBlank() == true) {
-			throw new Exception("El address es obligatorio");
-		}
-
-		if (entity.getEmail() == null || entity.getEmail().isBlank() == true) {
-			throw new Exception("El email es obligatorio");
-		}
-
-		if (entity.getEnable() == null || entity.getEnable().isBlank() == true) {
-			throw new Exception("El enable es obligatorio");
-		}
-
-		if (entity.getName() == null || entity.getName().isBlank() == true) {
-			throw new Exception("El name es obligatorio");
-		}
-
-		if (entity.getPhone() == null || entity.getPhone().isBlank() == true) {
-			throw new Exception("El phone es obligatorio");
-		}
-
-		if (entity.getToken() == null || entity.getToken().isBlank() == true) {
-			throw new Exception("El address es obligatorio");
 		}
 	}
 
