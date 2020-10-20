@@ -1,9 +1,22 @@
 package co.edu.usbcali.demo.dto;
 
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class PaymentMethodDTO {
 
 	private String payId;
+	
+	@NotNull
+	@Size(min = 4, max = 255)
+	@NotEmpty
 	private String name;
+	
+	@NotNull
+	@Size(min = 1, max = 1)
+	@NotEmpty
 	private String enable;
 
 	public PaymentMethodDTO() {
@@ -17,11 +30,11 @@ public class PaymentMethodDTO {
 		this.enable = enable;
 	}
 
-	public String getProId() {
+	public String getPayId() {
 		return payId;
 	}
 
-	public void setProId(String payId) {
+	public void setPayId(String payId) {
 		this.payId = payId;
 	}
 
