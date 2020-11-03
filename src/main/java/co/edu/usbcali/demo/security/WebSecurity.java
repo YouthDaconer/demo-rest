@@ -67,11 +67,12 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		// Se define la clase que recupera los usuarios y el algoritmo para procesar los passwords
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
 	}
+	
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+		return source;
+	}
 
-//	@Bean
-//	CorsConfigurationSource corsConfigurationSource() {
-//		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-//		return source;
-//	}
 }
