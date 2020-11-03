@@ -24,67 +24,63 @@ import co.edu.usbcali.demo.dto.PaymentMethodDTO;
 import co.edu.usbcali.demo.mapper.PaymentMethodMapper;
 import co.edu.usbcali.demo.service.PaymentMethodService;
 
-@RestController					 	
+@RestController
 @RequestMapping("/api/paymentMethod")
 @CrossOrigin("*")
 public class PaymentMethodController {
 
 	private final static Logger log = LoggerFactory.getLogger(PaymentMethodController.class);
-	
+
 	@Autowired
 	PaymentMethodService paymentMethodService;
-	
+
 	@Autowired
 	PaymentMethodMapper paymentMethodMapper;
 
 	@PostMapping("/save")
-	public ResponseEntity<?> save(@Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws Exception{
-			PaymentMethod paymentMethod = paymentMethodMapper.toPaymentMethod(paymentMethodDTO);
-			paymentMethod = paymentMethodService.save(paymentMethod);
-			paymentMethodDTO=paymentMethodMapper.toPaymentMethodDTO(paymentMethod);
-			
-			return ResponseEntity.ok().body(paymentMethodDTO);
-		
+	public ResponseEntity<?> save(@Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws Exception {
+		PaymentMethod paymentMethod = paymentMethodMapper.toPaymentMethod(paymentMethodDTO);
+		paymentMethod = paymentMethodService.save(paymentMethod);
+		paymentMethodDTO = paymentMethodMapper.toPaymentMethodDTO(paymentMethod);
+
+		return ResponseEntity.ok().body(paymentMethodDTO);
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<?> update(@Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws Exception{
-			PaymentMethod paymentMethod = paymentMethodMapper.toPaymentMethod(paymentMethodDTO);
-			paymentMethodService.update(paymentMethod);
-			paymentMethodDTO=paymentMethodMapper.toPaymentMethodDTO(paymentMethod);
-	
-			return ResponseEntity.ok().body(paymentMethodDTO);
-		
+	public ResponseEntity<?> update(@Valid @RequestBody PaymentMethodDTO paymentMethodDTO) throws Exception {
+		PaymentMethod paymentMethod = paymentMethodMapper.toPaymentMethod(paymentMethodDTO);
+		paymentMethodService.update(paymentMethod);
+		paymentMethodDTO = paymentMethodMapper.toPaymentMethodDTO(paymentMethod);
+
+		return ResponseEntity.ok().body(paymentMethodDTO);
 	}
-	
+
 	@GetMapping("/findAll")
-	public ResponseEntity<?> findAll() throws Exception{
-			List<PaymentMethod> paymentMethods =paymentMethodService.findAll();
-			List<PaymentMethodDTO> paymentMethodDTOs = paymentMethodMapper.toPaymentMethodsDTO(paymentMethods);
-			
-			return ResponseEntity.ok().body(paymentMethodDTOs);
+	public ResponseEntity<?> findAll() throws Exception {
+		List<PaymentMethod> paymentMethods = paymentMethodService.findAll();
+		List<PaymentMethodDTO> paymentMethodDTOs = paymentMethodMapper.toPaymentMethodsDTO(paymentMethods);
+
+		return ResponseEntity.ok().body(paymentMethodDTOs);
 	}
-	
+
 	@GetMapping("/findById/{payId}")
 	public ResponseEntity<?> findById(@PathVariable("payId") Integer payId) throws Exception {
-			Optional<PaymentMethod> paymentMethodOptional=paymentMethodService.findById(payId);
-			if (paymentMethodOptional.isPresent()==false) {
-				return ResponseEntity.ok().body(null);
-			}
-			PaymentMethod paymentMethod = paymentMethodOptional.get();
-			
-			PaymentMethodDTO paymentMethodDTO= paymentMethodMapper.toPaymentMethodDTO(paymentMethod);
+		Optional<PaymentMethod> paymentMethodOptional = paymentMethodService.findById(payId);
+		if (paymentMethodOptional.isPresent() == false) {
+			return ResponseEntity.ok().body(null);
+		}
+		PaymentMethod paymentMethod = paymentMethodOptional.get();
 
-	
-			return ResponseEntity.ok().body(paymentMethodDTO);
+		PaymentMethodDTO paymentMethodDTO = paymentMethodMapper.toPaymentMethodDTO(paymentMethod);
+
+		return ResponseEntity.ok().body(paymentMethodDTO);
 	}
-	
+
 	@DeleteMapping("/delete/{payId}")
 	public ResponseEntity<?> delete(@PathVariable("payId") Integer payId) throws Exception {
-			paymentMethodService.deleteById(payId);
+		paymentMethodService.deleteById(payId);
 
-			return ResponseEntity.ok().build();
+		return ResponseEntity.ok().build();
 	}
-	
-	
+
 }
