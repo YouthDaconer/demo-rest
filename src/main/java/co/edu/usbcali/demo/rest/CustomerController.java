@@ -74,7 +74,6 @@ public class CustomerController {
 			Customer customer = customerOptional.get();
 			
 			CustomerDTO customerDTO= customerMapper.toCustomerDTO(customer);
-
 	
 			return ResponseEntity.ok().body(customerDTO);
 	}
