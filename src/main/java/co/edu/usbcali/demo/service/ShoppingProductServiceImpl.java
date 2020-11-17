@@ -145,7 +145,13 @@ public class ShoppingProductServiceImpl implements ShoppingProductService {
 	
 	@Override
 	@Transactional(readOnly = true)
-	public Integer getShoppingProductByProductId(Integer carId, String proId) {	
+	public Integer totalShoppingProductItemsByShoppingCart(Integer carId) {	
+		return shoppingProductRepository.totalShoppingProductItemsByShoppingCart(carId);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public ShoppingProduct getShoppingProductByProductId(Integer carId, String proId) {	
 		return shoppingProductRepository.getShoppingProductByProductId(carId, proId);
 	}
 	

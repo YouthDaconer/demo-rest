@@ -62,10 +62,11 @@ public class CartServiceImpl implements CartService {
 	public ShoppingProduct addProduct(Integer carId, String proId, Integer quantity) throws Exception {
 
 		ShoppingCart shoppingCart = null;
+		ShoppingProduct shoppingProduct = null;
 		Product product = null;
 		Long totalShoppingProduct = 0L;
 		Long totalShoppingCart = 0L;
-		Integer shprId = 0;
+		Integer totalItemsShoppingCart = 0;
 
 		if (carId == null || carId <= 0) {
 			throw new Exception("El carId es nulo o menor a cero");
@@ -98,20 +99,45 @@ public class CartServiceImpl implements CartService {
 		if (product.getEnable().equals("N") == true) {
 			throw new Exception("El product esta inhabilitado");
 		}
-		
-		ShoppingProduct shoppingProduct = new ShoppingProduct();
-		shoppingProduct.setProduct(product);
-		shoppingProduct.setQuantity(quantity);
-		shoppingProduct.setShoppingCart(shoppingCart);
-		shoppingProduct.setShprId(0);
-		totalShoppingProduct = Long.valueOf(product.getPrice() * quantity);
-		shoppingProduct.setTotal(totalShoppingProduct);
 
-		shoppingProduct = shoppingProductService.save(shoppingProduct);
+		shoppingProduct = shoppingProductService.getShoppingProductByProductId(carId, proId);
+
+		if (shoppingProduct == null) {
+			shoppingProduct = new ShoppingProduct();
+			shoppingProduct.setProduct(product);
+			shoppingProduct.setQuantity(quantity);
+			shoppingProduct.setShoppingCart(shoppingCart);
+			shoppingProduct.setShprId(0);
+			totalShoppingProduct = Long.valueOf(product.getPrice() * quantity);
+			shoppingProduct.setTotal(totalShoppingProduct);
+
+			shoppingProduct = shoppingProductService.save(shoppingProduct);
+		} else {
+			totalShoppingProduct = Long.valueOf(product.getPrice() * quantity) + shoppingProduct.getTotal();
+			shoppingProduct.setTotal(totalShoppingProduct);
+			shoppingProduct.setQuantity(quantity + shoppingProduct.getQuantity());
+			
+			shoppingProductService.update(shoppingProduct);
+		}
 
 		totalShoppingCart = shoppingProductService.totalShoppingProductByShoppingCart(carId);
 
+		if (totalShoppingCart == null) {
+			shoppingCart.setTotal(0L);
+		} else {
+			shoppingCart.setTotal(totalShoppingCart);
+		}
+		
+		totalItemsShoppingCart = shoppingProductService.totalShoppingProductItemsByShoppingCart(carId);
+
+		if (totalItemsShoppingCart == null) {
+			shoppingCart.setItems(0);
+		} else {
+			shoppingCart.setItems(totalItemsShoppingCart);
+		}
+
 		shoppingCart.setTotal(totalShoppingCart);
+		shoppingCart.setItems(totalItemsShoppingCart);
 		shoppingCartService.update(shoppingCart);
 
 		return shoppingProduct;
@@ -123,10 +149,10 @@ public class CartServiceImpl implements CartService {
 
 		ShoppingCart shoppingCart = null;
 		ShoppingProduct shoppingProduct = null;
-		Integer shprId = 0;
 		Product product = null;
 		Long totalShoppingProduct = 0L;
 		Long totalShoppingCart = 0L;
+		Integer totalItemsShoppingCart = 0;
 
 		if (carId == null || carId <= 0) {
 			throw new Exception("El carId es nulo o menor a cero");
@@ -156,13 +182,11 @@ public class CartServiceImpl implements CartService {
 			throw new Exception("El product esta inhabilitado");
 		}
 
-		shprId = shoppingProductService.getShoppingProductByProductId(carId, proId);
+		shoppingProduct = shoppingProductService.getShoppingProductByProductId(carId, proId);
 
-		if (shprId == null || shprId == 0) {
+		if (shoppingProduct == null) {
 			throw new Exception("El producto no existe en el carro de compras");
 		}
-
-		shoppingProduct = shoppingProductService.findById(shprId).get();
 
 		if (shoppingProduct.getQuantity() > 1) {
 			totalShoppingProduct = Long.valueOf(product.getPrice() * (shoppingProduct.getQuantity() - 1));
@@ -180,6 +204,14 @@ public class CartServiceImpl implements CartService {
 			shoppingCart.setTotal(0L);
 		} else {
 			shoppingCart.setTotal(totalShoppingCart);
+		}
+
+		totalItemsShoppingCart = shoppingProductService.totalShoppingProductItemsByShoppingCart(carId);
+
+		if (totalItemsShoppingCart == null) {
+			shoppingCart.setItems(0);
+		} else {
+			shoppingCart.setItems(totalItemsShoppingCart);
 		}
 
 		shoppingCartService.update(shoppingCart);
@@ -203,6 +235,7 @@ public class CartServiceImpl implements CartService {
 		shoppingProductService.deleteShoppingProductByCartId(carId);
 
 		shoppingCart.setTotal(0L);
+		shoppingCart.setItems(0);
 		shoppingCartService.update(shoppingCart);
 	}
 
@@ -219,7 +252,7 @@ public class CartServiceImpl implements CartService {
 		if (shoppingCartService.findById(carId).isPresent() == false) {
 			throw new Exception("El shoppingCart no existe");
 		}
-		
+
 		return shoppingProductService.findShoppingProductByShoppingCart(carId);
 	}
 

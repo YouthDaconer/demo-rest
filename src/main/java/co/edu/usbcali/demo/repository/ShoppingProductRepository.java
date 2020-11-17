@@ -13,8 +13,11 @@ public interface ShoppingProductRepository extends JpaRepository<ShoppingProduct
 	@Query("SELECT SUM(shpr.total) FROM ShoppingProduct shpr WHERE shpr.shoppingCart.carId=:carId")
 	public Long totalShoppingProductByShoppingCart(Integer carId);
 	
-	@Query("SELECT shpr.shprId FROM ShoppingProduct shpr WHERE shpr.shoppingCart.carId=:carId AND shpr.product.proId=:proId")
-	public Integer getShoppingProductByProductId(Integer carId, String proId);
+	@Query("SELECT SUM(shpr.quantity) FROM ShoppingProduct shpr WHERE shpr.shoppingCart.carId=:carId")
+	public Integer totalShoppingProductItemsByShoppingCart(Integer carId);
+	
+	@Query("SELECT shpr FROM ShoppingProduct shpr WHERE shpr.shoppingCart.carId=:carId AND shpr.product.proId=:proId")
+	public ShoppingProduct getShoppingProductByProductId(Integer carId, String proId);
 	
 	@Query("DELETE FROM ShoppingProduct shpr WHERE shpr.shoppingCart.carId=:carId")
 	@Modifying
