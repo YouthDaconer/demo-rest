@@ -47,9 +47,7 @@ public class Customer implements java.io.Serializable {
 	@NotEmpty
 	private String phone;
 	
-	@NotNull
 	@Size(max = 255)
-	@NotEmpty
 	private String token;
 	
 	private List<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>(0);

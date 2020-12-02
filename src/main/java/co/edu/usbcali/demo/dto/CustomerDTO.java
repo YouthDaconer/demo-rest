@@ -28,13 +28,11 @@ public class CustomerDTO {
 	private String name;
 	
 	@NotNull
-	@Size(min = 6, max = 255)
+	@Size(min = 10, max = 255)
 	@NotEmpty
 	private String phone;
 	
-	@NotNull
 	@Size(max = 255)
-	@NotEmpty
 	private String token;
 
 	public CustomerDTO() {

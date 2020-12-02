@@ -59,6 +59,24 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public ShoppingProduct existProductInCart(Integer carId, String proId) throws Exception {
+		ShoppingProduct shoppingProduct = new ShoppingProduct();
+
+		if (carId == null || carId <= 0) {
+			throw new Exception("El carId es nulo o menor a cero");
+		}
+
+		if (proId == null || proId.isBlank() == true) {
+			throw new Exception("El proId es nulo o menor a esta en blanco");
+		}
+
+		shoppingProduct = shoppingProductService.getShoppingProductByProductId(carId, proId);
+
+		return shoppingProduct;
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public ShoppingProduct addProduct(Integer carId, String proId, Integer quantity) throws Exception {
 
 		ShoppingCart shoppingCart = null;
@@ -116,7 +134,7 @@ public class CartServiceImpl implements CartService {
 			totalShoppingProduct = Long.valueOf(product.getPrice() * quantity) + shoppingProduct.getTotal();
 			shoppingProduct.setTotal(totalShoppingProduct);
 			shoppingProduct.setQuantity(quantity + shoppingProduct.getQuantity());
-			
+
 			shoppingProductService.update(shoppingProduct);
 		}
 
@@ -127,7 +145,7 @@ public class CartServiceImpl implements CartService {
 		} else {
 			shoppingCart.setTotal(totalShoppingCart);
 		}
-		
+
 		totalItemsShoppingCart = shoppingProductService.totalShoppingProductItemsByShoppingCart(carId);
 
 		if (totalItemsShoppingCart == null) {

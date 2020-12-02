@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import co.edu.usbcali.demo.domain.Product;
+import co.edu.usbcali.demo.domain.ShoppingProduct;
 
 public interface ProductRepository extends JpaRepository<Product, String>, ProductRepositoryCustom {
 

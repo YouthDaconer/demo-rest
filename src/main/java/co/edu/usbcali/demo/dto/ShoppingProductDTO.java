@@ -7,6 +7,10 @@ public class ShoppingProductDTO {
 	private Integer carId;
 	private Integer quantity;		
 	private Integer total;
+	private String name;
+	private Long price;	
+	private String detail;
+	private String image;	
 
 	public ShoppingProductDTO() {
 		super();
@@ -61,4 +65,36 @@ public class ShoppingProductDTO {
 		this.total = total;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Long getPrice() {
+		return price;
+	}
+
+	public void setPrice(Long price) {
+		this.price = price;
+	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
 }

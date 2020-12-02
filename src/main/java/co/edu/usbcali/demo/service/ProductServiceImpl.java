@@ -1,5 +1,6 @@
 package co.edu.usbcali.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -15,7 +16,9 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.edu.usbcali.demo.domain.Product;
+import co.edu.usbcali.demo.domain.ShoppingProduct;
 import co.edu.usbcali.demo.repository.ProductRepository;
+import co.edu.usbcali.demo.repository.ShoppingProductRepository;
 
 @Service
 @Scope("singleton")
@@ -23,6 +26,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	ProductRepository productRepository;
+	
+	@Autowired
+	ShoppingProductRepository shoppingProductRepository;
 
 	@Autowired
 	Validator validator;
@@ -99,14 +105,22 @@ public class ProductServiceImpl implements ProductService {
 		if (!productRepository.existsById(entity.getProId())) {
 			throw new Exception("El product con proId: " + entity.getProId() + " no existe. No se puede borrar");
 		}
-
-		productRepository.findById(entity.getProId()).ifPresent(productRepository -> {
+		
+		List<ShoppingProduct> shoppingProducts = shoppingProductRepository.getShoppingProductByProduct(entity.getProId());
+		
+		if (shoppingProducts != null
+				&& shoppingProducts.isEmpty() == false) {
+			throw new RuntimeException(
+					"El product con proId: " + entity.getProId() + " tiene ShoppingProducts, no se puede borrar");
+		}
+		
+		/*productRepository.findById(entity.getProId()).ifPresent(productRepository -> {
 			if (productRepository.getShoppingProducts() != null
 					&& productRepository.getShoppingProducts().isEmpty() == false) {
 				throw new RuntimeException(
 						"El product con proId: " + entity.getProId() + " tiene ShoppingProducts, no se puede borrar");
 			}
-		});
+		});*/
 
 		productRepository.deleteById(entity.getProId());
 

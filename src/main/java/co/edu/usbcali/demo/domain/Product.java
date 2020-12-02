@@ -10,10 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-/**
- * @author Zathura Code Generator http://zathuracode.org/ www.zathuracode.org
- *
- */
 @Entity
 @Table(name = "product", schema = "public")
 public class Product implements java.io.Serializable {

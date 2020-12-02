@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.usbcali.demo.domain.Product;
+import co.edu.usbcali.demo.domain.ShoppingProduct;
 import co.edu.usbcali.demo.dto.ProductDTO;
+import co.edu.usbcali.demo.dto.ShoppingProductDTO;
 import co.edu.usbcali.demo.mapper.ProductMapper;
 import co.edu.usbcali.demo.service.ProductService;
 
