@@ -43,14 +43,14 @@ public class CartController {
 	@Autowired
 	ShoppingProductMapper shoppingProductMapper;
 
-	@PostMapping("/createCart")
-	public ResponseEntity<?> createCart(@Valid @RequestBody ShoppingCartDTO shoppingCartDTO) throws Exception {
-		if (shoppingCartDTO.getEmail() == null) {
+	@PostMapping("/createCart/{email}")
+	public ResponseEntity<?> createCart(@PathVariable("email") String email) throws Exception {
+		if (email == null || email.equals("")) {
 			throw new Exception("El email del cliente para el carrito de compras es nulo");
 		}
 
-		ShoppingCart shoppingCart = cartService.createCart(shoppingCartDTO.getEmail());
-		shoppingCartDTO = shoppingCartMapper.toShoppingCartDTO(shoppingCart);
+		ShoppingCart shoppingCart = cartService.createCart(email);
+		ShoppingCartDTO shoppingCartDTO = shoppingCartMapper.toShoppingCartDTO(shoppingCart);
 
 		return ResponseEntity.ok().body(shoppingCartDTO);
 
