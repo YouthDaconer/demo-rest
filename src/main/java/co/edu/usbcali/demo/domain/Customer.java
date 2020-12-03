@@ -14,19 +14,17 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-
-
 @Entity
 @Table(name = "customer", schema = "public")
 public class Customer implements java.io.Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@NotNull
 	@Email
 	@Size(min = 3, max = 255)
 	private String email;
-	
+
 	@NotNull
 	@Size(min = 3, max = 255)
 	@NotEmpty
@@ -36,27 +34,30 @@ public class Customer implements java.io.Serializable {
 	@Size(min = 1, max = 1)
 	@NotEmpty
 	private String enable;
-	
+
 	@NotNull
 	@Size(min = 4, max = 255)
 	@NotEmpty
 	private String name;
-	
+
 	@NotNull
 	@Size(min = 6, max = 255)
 	@NotEmpty
 	private String phone;
-	
+
 	@Size(max = 255)
 	private String token;
-	
+
+	@NotNull
+	private Integer tipo;
+
 	private List<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>(0);
 
 	public Customer() {
 	}
 
 	public Customer(String email, String address, String enable, String name, String phone,
-			List<ShoppingCart> shoppingCarts, String token) {
+			List<ShoppingCart> shoppingCarts, String token, Integer tipo) {
 		this.email = email;
 		this.address = address;
 		this.enable = enable;
@@ -64,9 +65,9 @@ public class Customer implements java.io.Serializable {
 		this.phone = phone;
 		this.token = token;
 		this.shoppingCarts = shoppingCarts;
+		this.tipo = tipo;
 	}
 
-	
 	@Id
 	@Column(name = "email", unique = true, nullable = false)
 	public String getEmail() {
@@ -103,7 +104,7 @@ public class Customer implements java.io.Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	@Column(name = "phone", nullable = false)
 	public String getPhone() {
 		return this.phone;
@@ -113,7 +114,7 @@ public class Customer implements java.io.Serializable {
 		this.phone = phone;
 	}
 
-	@Column(name = "token", nullable = false)	
+	@Column(name = "token", nullable = false)
 	public String getToken() {
 		return this.token;
 	}
@@ -130,4 +131,13 @@ public class Customer implements java.io.Serializable {
 	public void setShoppingCarts(List<ShoppingCart> shoppingCarts) {
 		this.shoppingCarts = shoppingCarts;
 	}
+
+	public Integer getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Integer tipo) {
+		this.tipo = tipo;
+	}
+	
 }

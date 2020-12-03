@@ -11,6 +11,8 @@ public interface CartService {
 
 	public ShoppingProduct existProductInCart(Integer carId, String proId) throws Exception;
 
+	public ShoppingCart getCurrentUserCart(String email) throws Exception;
+	
 	public ShoppingProduct addProduct(Integer carId, String proId, Integer quantity) throws Exception;
 
 	public void removeProduct(Integer carId, String proId) throws Exception;

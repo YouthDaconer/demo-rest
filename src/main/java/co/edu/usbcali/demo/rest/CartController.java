@@ -65,6 +65,14 @@ public class CartController {
 		return ResponseEntity.ok().body(shoppingProductDTO);
 	}
 
+	@GetMapping("/getCurrentUserCart/{email}")
+	public ResponseEntity<?> getCurrentUserCart(@PathVariable("email") String email) throws Exception {
+		ShoppingCart shoppingCart = cartService.getCurrentUserCart(email);
+		ShoppingCartDTO shoppingCartDTO = shoppingCartMapper.toShoppingCartDTO(shoppingCart);
+
+		return ResponseEntity.ok().body(shoppingCartDTO);
+	}
+
 	@PostMapping("/addProduct/{carId}/{proId}/{quantity}")
 	public ResponseEntity<?> addProduct(@PathVariable("carId") Integer carId, @PathVariable("proId") String proId,
 			@PathVariable("quantity") Integer quantity) throws Exception {

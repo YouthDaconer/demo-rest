@@ -77,6 +77,20 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public ShoppingCart getCurrentUserCart(String email) throws Exception {
+		ShoppingCart shoppingCart = new ShoppingCart();
+
+		if (email == null || email.isEmpty()) {
+			throw new Exception("El email es nulo o vacio");
+		}
+
+		shoppingCart = shoppingCartService.getCurrentUserCart(email);
+
+		return shoppingCart;
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public ShoppingProduct addProduct(Integer carId, String proId, Integer quantity) throws Exception {
 
 		ShoppingCart shoppingCart = null;

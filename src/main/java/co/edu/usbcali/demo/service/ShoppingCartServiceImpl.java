@@ -108,4 +108,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		return shoppingCartRepository.count();
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public ShoppingCart getCurrentUserCart(String email) {
+		return shoppingCartRepository.getCurrentUserCart(email);
+	}
+
 }
