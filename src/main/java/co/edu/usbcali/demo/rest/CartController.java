@@ -56,6 +56,15 @@ public class CartController {
 
 	}
 
+	@PostMapping("/finishPurchase/{carId}/{payId}")
+	public ResponseEntity<?> finishPurchase(@PathVariable("carId") Integer carId, @PathVariable("payId") Integer payId)
+			throws Exception {
+		ShoppingCart shoppingCart = cartService.finishPurchase(carId, payId);
+		ShoppingCartDTO shoppingCartDTO = shoppingCartMapper.toShoppingCartDTO(shoppingCart);
+
+		return ResponseEntity.ok().body(shoppingCartDTO);
+	}
+
 	@GetMapping("/existProductInCart/{carId}/{proId}")
 	public ResponseEntity<?> existProductInCart(@PathVariable("carId") Integer carId,
 			@PathVariable("proId") String proId) throws Exception {
@@ -88,6 +97,23 @@ public class CartController {
 			throws Exception {
 
 		cartService.removeProduct(carId, proId);
+
+		return ResponseEntity.ok().body(true);
+	}
+
+	@PostMapping("/removeShoppingProduct/{carId}/{proId}")
+	public ResponseEntity<?> removeShoppingProduct(@PathVariable("carId") Integer carId,
+			@PathVariable("proId") String proId) throws Exception {
+
+		cartService.removeShoppingProduct(carId, proId);
+
+		return ResponseEntity.ok().body(true);
+	}
+
+	@PostMapping("/clearCart/{carId}")
+	public ResponseEntity<?> clearCart(@PathVariable("carId") Integer carId) throws Exception {
+
+		cartService.clearCart(carId);
 
 		return ResponseEntity.ok().body(true);
 	}

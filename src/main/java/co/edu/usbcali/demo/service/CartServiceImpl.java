@@ -10,9 +10,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import co.edu.usbcali.demo.domain.Customer;
+import co.edu.usbcali.demo.domain.PaymentMethod;
 import co.edu.usbcali.demo.domain.Product;
 import co.edu.usbcali.demo.domain.ShoppingCart;
 import co.edu.usbcali.demo.domain.ShoppingProduct;
+import co.edu.usbcali.demo.repository.PaymentMethodRepository;
+import co.edu.usbcali.demo.repository.ShoppingCartRepository;
 
 @Service
 @Scope("singleton")
@@ -29,6 +32,12 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	ShoppingProductService shoppingProductService;
+
+	@Autowired
+	PaymentMethodRepository paymentMethodRepository;
+
+	@Autowired
+	ShoppingCartRepository shoppingCartRepository;
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
@@ -53,6 +62,33 @@ public class CartServiceImpl implements CartService {
 		ShoppingCart shoppingCart = new ShoppingCart(0, customer, null, 0, 0L, "Y", null);
 
 		shoppingCart = shoppingCartService.save(shoppingCart);
+
+		return shoppingCart;
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public ShoppingCart finishPurchase(Integer carId, Integer payId) throws Exception {
+		ShoppingCart shoppingCart = new ShoppingCart();
+		PaymentMethod paymentMethod = new PaymentMethod();
+
+		Optional<PaymentMethod> paymentMethodOptional = paymentMethodRepository.findById(payId);
+		paymentMethod = paymentMethodOptional.get();
+
+		if (paymentMethod == null) {
+			throw new Exception("No existe el método de pago");
+		}
+
+		Optional<ShoppingCart> shoppingCartOptional = shoppingCartService.findById(carId);
+		shoppingCart = shoppingCartOptional.get();
+
+		if (shoppingCart == null) {
+			throw new Exception("No existe el carrito de compras");
+		}
+
+		shoppingCart.setPaymentMethod(paymentMethod);
+
+		shoppingCartRepository.save(shoppingCart);
 
 		return shoppingCart;
 	}
@@ -251,6 +287,71 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+	public void removeShoppingProduct(Integer carId, String proId) throws Exception {
+
+		ShoppingCart shoppingCart = null;
+		ShoppingProduct shoppingProduct = null;
+		Product product = null;
+		Long totalShoppingCart = 0L;
+		Integer totalItemsShoppingCart = 0;
+
+		if (carId == null || carId <= 0) {
+			throw new Exception("El carId es nulo o menor a cero");
+		}
+
+		if (proId == null || proId.isBlank() == true) {
+			throw new Exception("El proId es nulo o menor a esta en blanco");
+		}
+
+		if (shoppingCartService.findById(carId).isPresent() == false) {
+			throw new Exception("El shoppingCart no existe");
+		}
+
+		shoppingCart = shoppingCartService.findById(carId).get();
+
+		if (shoppingCart.getEnable().equals("N") == true) {
+			throw new Exception("El shoppingCart esta inhabilitado");
+		}
+
+		if (productService.findById(proId).isPresent() == false) {
+			throw new Exception("El product no existe");
+		}
+
+		product = productService.findById(proId).get();
+
+		if (product.getEnable().equals("N") == true) {
+			throw new Exception("El product esta inhabilitado");
+		}
+
+		shoppingProduct = shoppingProductService.getShoppingProductByProductId(carId, proId);
+
+		if (shoppingProduct == null) {
+			throw new Exception("El producto no existe en el carro de compras");
+		}
+
+		shoppingProductService.delete(shoppingProduct);
+
+		totalShoppingCart = shoppingProductService.totalShoppingProductByShoppingCart(carId);
+
+		if (totalShoppingCart == null) {
+			shoppingCart.setTotal(0L);
+		} else {
+			shoppingCart.setTotal(totalShoppingCart);
+		}
+
+		totalItemsShoppingCart = shoppingProductService.totalShoppingProductItemsByShoppingCart(carId);
+
+		if (totalItemsShoppingCart == null) {
+			shoppingCart.setItems(0);
+		} else {
+			shoppingCart.setItems(totalItemsShoppingCart);
+		}
+
+		shoppingCartService.update(shoppingCart);
+	}
+
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
 	public void clearCart(Integer carId) throws Exception {
 		ShoppingCart shoppingCart = null;
 
@@ -274,9 +375,6 @@ public class CartServiceImpl implements CartService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<ShoppingProduct> findShoppingProductByShoppingCart(Integer carId) throws Exception {
-		ShoppingCart shoppingCart = null;
-		List<ShoppingProduct> shoppingProducts = null;
-
 		if (carId == null || carId <= 0) {
 			throw new Exception("El carId es nulo o menor a cero");
 		}
