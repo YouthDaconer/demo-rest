@@ -18,4 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, String>, Produ
 	
 	@Query("SELECT SUM(p.price) FROM Product p")
 	public Double sumatoriaPrecio();
+	
+	@Query("SELECT p FROM Product p WHERE p.enable = 'Y'")
+	public List<Product> findAllEnable();
 }

@@ -67,6 +67,14 @@ public class ProductController {
 		return ResponseEntity.ok().body(productDTOs);
 	}
 
+	@GetMapping("/findAllEnable")
+	public ResponseEntity<?> findAllEnable() throws Exception {
+		List<Product> products = productService.findAllEnable();
+		List<ProductDTO> productDTOs = productMapper.toProductsDTO(products);
+
+		return ResponseEntity.ok().body(productDTOs);
+	}
+
 	@GetMapping("/findById/{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") String id) throws Exception {
 		Optional<Product> productOptional = productService.findById(id);

@@ -51,6 +51,12 @@ public class ProductServiceImpl implements ProductService {
 	public List<Product> findAll() {
 		return productRepository.findAll();
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<Product> findAllEnable() {
+		return productRepository.findAllEnable();
+	}
 
 	@Override
 	@Transactional(readOnly = true)
