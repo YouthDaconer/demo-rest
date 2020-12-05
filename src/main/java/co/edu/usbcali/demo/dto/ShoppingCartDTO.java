@@ -2,26 +2,35 @@ package co.edu.usbcali.demo.dto;
 
 public class ShoppingCartDTO {
 
-	private Integer carId;	
-	private Integer total;	
-	private Integer items;	
+	private Integer carId;
+	private Integer total;
+	private Integer items;
 	private String email;
-	private Integer payId;		
+	private String name;
+	private String address;
+	private String payName;
+	private Integer payId;
 	private String enable;
 
 	public ShoppingCartDTO() {
 		super();
 	}
 
-	public ShoppingCartDTO(Integer carId, Integer total, Integer items, String email, Integer payId, String enable) {
+	public ShoppingCartDTO(Integer carId, Integer total, Integer items, String email, String name, String address,
+			String payName, Integer payId, String enable) {
 		super();
 		this.carId = carId;
 		this.total = total;
 		this.items = items;
 		this.email = email;
+		this.name = name;
+		this.address = address;
+		this.payName = payName;
 		this.payId = payId;
 		this.enable = enable;
 	}
+
+
 
 	public Integer getCarId() {
 		return carId;
@@ -69,6 +78,30 @@ public class ShoppingCartDTO {
 
 	public void setEnable(String enable) {
 		this.enable = enable;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getPayName() {
+		return payName;
+	}
+
+	public void setPayName(String payName) {
+		this.payName = payName;
 	}
 
 }

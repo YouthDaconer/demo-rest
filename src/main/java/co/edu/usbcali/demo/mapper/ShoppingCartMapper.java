@@ -18,7 +18,13 @@ public interface ShoppingCartMapper {
 	
 	@Mapping(source="customer.email", target="email")
 	
+	@Mapping(source="customer.name", target="name")
+	
+	@Mapping(source="customer.address", target="address")
+	
 	@Mapping(source="paymentMethod.payId", target="payId")
+	
+	@Mapping(source="paymentMethod.name", target="payName")
 	
 	@Mapping(source="shoppingCart.enable", target="enable")
 	
