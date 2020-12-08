@@ -65,6 +65,14 @@ public class ShoppingCartController {
 		return ResponseEntity.ok().body(shoppingCartDTOs);
 	}
 
+	@GetMapping("/findByEmail/{email}")
+	public ResponseEntity<?> findByEmail(@PathVariable("email") String email) throws Exception {
+		List<ShoppingCart> shoppingCarts = shoppingCartService.findByEmail(email);
+		List<ShoppingCartDTO> shoppingCartDTOs = shoppingCartMapper.toShoppingCartsDTO(shoppingCarts);
+
+		return ResponseEntity.ok().body(shoppingCartDTOs);
+	}
+
 	@GetMapping("/findById/{carId}")
 	public ResponseEntity<?> findById(@PathVariable("carId") Integer carId) throws Exception {
 		Optional<ShoppingCart> shoppingCartOptional = shoppingCartService.findById(carId);

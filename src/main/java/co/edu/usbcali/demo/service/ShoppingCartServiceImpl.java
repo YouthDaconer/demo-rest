@@ -114,4 +114,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 		return shoppingCartRepository.getCurrentUserCart(email);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public List<ShoppingCart> findByEmail(String email) {
+		return shoppingCartRepository.findByEmail(email);
+	}
+
 }
