@@ -30,6 +30,12 @@ public class PaymentMethodServiceImpl implements PaymentMethodService {
 	public Optional<PaymentMethod> findById(Integer id) throws Exception {
 		return paymentMethodRepository.findById(id);
 	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<PaymentMethod> findAllEnable() throws Exception {
+		return paymentMethodRepository.findAllEnable();
+	}
 
 	@Override
 	@Transactional(readOnly = true)

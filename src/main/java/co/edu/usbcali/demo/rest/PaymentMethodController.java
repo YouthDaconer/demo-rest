@@ -62,6 +62,14 @@ public class PaymentMethodController {
 
 		return ResponseEntity.ok().body(paymentMethodDTOs);
 	}
+	
+	@GetMapping("/findAllEnable")
+	public ResponseEntity<?> findByEnable() throws Exception {
+		List<PaymentMethod> paymentMethods = paymentMethodService.findAllEnable();
+		List<PaymentMethodDTO> paymentMethodDTOs = paymentMethodMapper.toPaymentMethodsDTO(paymentMethods);
+
+		return ResponseEntity.ok().body(paymentMethodDTOs);
+	}
 
 	@GetMapping("/findById/{payId}")
 	public ResponseEntity<?> findById(@PathVariable("payId") Integer payId) throws Exception {
